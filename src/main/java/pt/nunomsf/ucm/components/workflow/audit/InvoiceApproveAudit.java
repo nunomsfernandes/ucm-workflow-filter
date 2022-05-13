@@ -4,6 +4,7 @@ import intradoc.data.DataBinder;
 import intradoc.data.DataException;
 import intradoc.data.Workspace;
 import intradoc.provider.Provider;
+import pt.nunomsf.ucm.components.workflow.constants.Constants;
 import pt.nunomsf.ucm.components.workflow.exceptions.AuditException;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventResponse;
@@ -22,15 +23,15 @@ public class InvoiceApproveAudit {
     public void log(InvoiceApproveEventRequest eventRequest) throws AuditException {
         try {
             DataBinder dataBinder = new DataBinder();
-            dataBinder.putLocal("dID", String.valueOf(eventRequest.getDocRevisionId()));
-            dataBinder.putLocal("numFatura", eventRequest.getNumFatura());
-            dataBinder.putLocal("nifCliente", eventRequest.getNifCliente());
-            dataBinder.putLocal("nomDocumento", eventRequest.getFileName());
-            dataBinder.putLocal("codUtilizador", eventRequest.getApprover());
-            dataBinder.putLocalDate("datCriacao", eventRequest.getApprovedDate());
-            dataBinder.putLocal("codStatus", String.valueOf(InvoiceApproveEventStatus.CREATED.status));
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.dID, String.valueOf(eventRequest.getDocRevisionId()));
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.numFatura, eventRequest.getNumFatura());
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.nifCliente, eventRequest.getNifCliente());
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.nomDocumento, eventRequest.getFileName());
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.codUtilizador, eventRequest.getApprover());
+            dataBinder.putLocalDate(Constants.Queries.IARApproveDocumentAudit.Collumns.datCriacao, eventRequest.getApprovedDate());
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.codStatus, String.valueOf(InvoiceApproveEventStatus.CREATED.status));
             Workspace workspace = (Workspace) this.auditDatabaseProvider.getProvider();
-            workspace.execute("IARApproveDocumentAudit", dataBinder);
+            workspace.execute(Constants.Queries.IARApproveDocumentAudit.name, dataBinder);
         } catch (DataException e) {
             throw new AuditException(e);
         }
@@ -39,13 +40,13 @@ public class InvoiceApproveAudit {
     public void log(InvoiceApproveEventResponse eventResponse) throws AuditException {
         try {
             DataBinder dataBinder = new DataBinder();
-            dataBinder.putLocal("dID", String.valueOf(eventResponse.getDocRevisionId()));
-            dataBinder.putLocal("codStatus", String.valueOf(eventResponse.getCodStatus().status));
-            dataBinder.putLocal("codResposta", String.valueOf(eventResponse.getIntegrationId()));
-            dataBinder.putLocal("txtMessage", eventResponse.getMessage());
-            dataBinder.putLocalDate("datAtualizacao", new Date());
+            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Collumns.dID, String.valueOf(eventResponse.getDocRevisionId()));
+            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Collumns.codStatus, String.valueOf(eventResponse.getCodStatus().status));
+            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Collumns.codResposta, String.valueOf(eventResponse.getIntegrationId()));
+            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Collumns.txtMessage, eventResponse.getMessage());
+            dataBinder.putLocalDate(Constants.Queries.UARApproveDocumentAudit.Collumns.datAtualizacao, new Date());
             Workspace workspace = (Workspace) this.auditDatabaseProvider.getProvider();
-            workspace.execute("UARApproveDocumentAudit", dataBinder);
+            workspace.execute(Constants.Queries.UARApproveDocumentAudit.name, dataBinder);
         } catch (DataException e) {
             throw new AuditException(e);
         }

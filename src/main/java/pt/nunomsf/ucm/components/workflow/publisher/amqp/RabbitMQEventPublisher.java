@@ -39,6 +39,4 @@ public class RabbitMQEventPublisher<T> implements IPublisher<T, AMQPPublishMessa
             throw new PublishException(e.getMessage(), e);
         }
     }
-
-
 }

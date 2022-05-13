@@ -5,6 +5,7 @@ import intradoc.provider.Provider;
 import intradoc.provider.Providers;
 import intradoc.shared.SharedObjects;
 import org.apache.commons.io.IOUtils;
+import pt.nunomsf.ucm.components.workflow.constants.Constants;
 import pt.nunomsf.ucm.components.workflow.exceptions.FilterActionException;
 import pt.nunomsf.ucm.components.workflow.filters.actions.InvoiceApproveTemplateFilterAction;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
@@ -14,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
 
 public class InvoiceApproveStoreProcedureFilterAction extends InvoiceApproveTemplateFilterAction {
@@ -62,31 +62,16 @@ public class InvoiceApproveStoreProcedureFilterAction extends InvoiceApproveTemp
     }
     private byte[] readDocumentFileBytes(Long docRevisionId, Workspace workspace) throws DataException {
         DataBinder dataBinder = new DataBinder();
-        dataBinder.putLocal("dID", docRevisionId.toString());
-        dataBinder.putLocal("isPrimary", "1");
-        dataBinder.putLocal("isWebformat", "0");
-        dataBinder.putLocal("rendition", "primaryFile");
-        CallableResults results = workspace.executeCallable("QGetFileByDid", dataBinder);
-        try (InputStream stream = results.getBinaryInputStream("file")) {
+        dataBinder.putLocal(Constants.Fields.dID, docRevisionId.toString());
+        dataBinder.putLocal(Constants.DocRevisionAttribute.isPrimary, "1");
+        dataBinder.putLocal(Constants.DocRevisionAttribute.isWebformat, "0");
+        dataBinder.putLocal(Constants.DocRevisionAttribute.rendition, "primaryFile");
+        CallableResults results = workspace.executeCallable(Constants.Queries.QGetFileByDid, dataBinder);
+        try (InputStream stream = results.getBinaryInputStream(Constants.DocRevisionAttribute.file)) {
             return IOUtils.toByteArray(stream);
         } catch (IOException e) {
             throw new DataException(String.format("Could not read bytes of file with dID:%s, isPrimary:1, isWebFormat:1, rendition:primaryFile does not exist in the database", docRevisionId), e);
         }
     }
-    private InvoiceApproveEventRequest createEventRequest(Workspace workspace, DataBinder dataBinder) throws DataException {
-        Long docRevisionId = Long.valueOf(dataBinder.get("dID"));
-        String dDocName = dataBinder.getLocal("dDocName");
-        String dOriginalName = dataBinder.getLocal("dOriginalName");
-        ResultSet docInfo = readDocInfo(workspace, docRevisionId);
-        String xNumDocumento = docInfo.getStringValueByName("xNumDocumento");
-        String xCodNifCliente = docInfo.getStringValueByName("xCodNifCliente");
-        return new InvoiceApproveEventRequest(docRevisionId, dDocName, dOriginalName, new Date(), xNumDocumento, xCodNifCliente);
-    }
 
-    private ResultSet readDocInfo(Workspace workspace, Long docRevisionId) throws DataException {
-        DataBinder dataBinder = new DataBinder();
-        dataBinder.putLocal("dID", String.valueOf(docRevisionId));
-        ResultSet resultSet = workspace.createResultSet("QdocInfo", dataBinder);
-        return resultSet;
-    }
 }

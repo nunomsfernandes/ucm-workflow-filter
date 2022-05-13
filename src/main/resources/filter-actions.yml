@@ -1,0 +1,14 @@
+xIdcProfile:
+  - ARDocs:
+      conditions:
+        localData:
+          dWfName: ARDocs_Workflow
+          dWfStepName: WFS_ARDocs_Approve
+          dAction: APPROVE
+        collections:
+          docInfo:
+            0:
+              xIdcProfile: ARDocs
+      filter-actions:
+        - pt.nunomsf.ucm.components.workflow.filters.actions.storeprocedure.InvoiceApproveStoreProcedureFilterAction
+        - pt.nunomsf.ucm.components.workflow.filters.actions.amqp.InvoiceApproveAMQPPublisherFilterAction

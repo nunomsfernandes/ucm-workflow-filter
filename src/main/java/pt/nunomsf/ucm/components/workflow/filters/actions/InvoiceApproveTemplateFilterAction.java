@@ -1,14 +1,13 @@
 package pt.nunomsf.ucm.components.workflow.filters.actions;
 
-import intradoc.data.DataBinder;
-import intradoc.data.DataException;
-import intradoc.data.ResultSet;
 import intradoc.data.Workspace;
 import intradoc.provider.Provider;
 import intradoc.provider.Providers;
 import intradoc.shared.SharedObjects;
 import pt.nunomsf.ucm.components.workflow.audit.InvoiceApproveAudit;
+import pt.nunomsf.ucm.components.workflow.constants.Constants;
 import pt.nunomsf.ucm.components.workflow.exceptions.FilterActionException;
+import pt.nunomsf.ucm.components.workflow.filters.model.FilterActionData;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventResponse;
 
@@ -24,8 +23,8 @@ public abstract class InvoiceApproveTemplateFilterAction implements IFilterActio
     }
 
     @Override
-    public void execute(Workspace workspace, DataBinder dataBinder) throws FilterActionException {
-        InvoiceApproveEventRequest eventRequest = createEventRequest(workspace, dataBinder);
+    public void execute(Workspace workspace, FilterActionData data) throws FilterActionException {
+        InvoiceApproveEventRequest eventRequest = createEventRequest(workspace, data);
         try {
             this.audit.log(eventRequest);
             InvoiceApproveEventResponse eventResponse = executeAction(eventRequest, workspace);
@@ -41,24 +40,13 @@ public abstract class InvoiceApproveTemplateFilterAction implements IFilterActio
 
     protected abstract InvoiceApproveEventResponse executeAction(InvoiceApproveEventRequest request, Workspace workspace) throws FilterActionException;
 
-    private InvoiceApproveEventRequest createEventRequest(Workspace workspace, DataBinder dataBinder) throws FilterActionException {
-        try {
-            Long docRevisionId = Long.valueOf(dataBinder.get("dID"));
-            String fileName = dataBinder.getLocal("dOriginalName");
-            String approver = dataBinder.getLocal("dUser");
-            ResultSet docInfo = readDocInfo(workspace, docRevisionId);
-            String numFatura = docInfo.getStringValueByName("xNumDocumento");
-            String nifCliente = docInfo.getStringValueByName("xCodNifCliente");
-            return new InvoiceApproveEventRequest(docRevisionId, fileName, approver, new Date(), numFatura, nifCliente);
-        }catch (DataException e) {
-            throw new FilterActionException(e.getMessage(), e);
-        }
-    }
-    private ResultSet readDocInfo(Workspace workspace, Long docRevisionId) throws DataException {
-        DataBinder dataBinder = new DataBinder();
-        dataBinder.putLocal("dID", String.valueOf(docRevisionId));
-        ResultSet resultSet = workspace.createResultSet("QdocInfo", dataBinder);
-        return resultSet;
+    private InvoiceApproveEventRequest createEventRequest(Workspace workspace, FilterActionData data) throws FilterActionException {
+        Long docRevisionId = data.getLocalValue(Constants.Fields.dID).asLong();
+        String fileName = data.getLocalValue(Constants.Fields.dOriginalName).asString();
+        String approver = data.getLocalValue(Constants.Fields.dUser).asString();
+        String numFatura = data.getCollectionValue(Constants.ResultSets.DOCINFO, 0, Constants.Fields.xNumDocumento).asString();
+        String nifCliente = data.getCollectionValue(Constants.ResultSets.DOCINFO, 0, Constants.Fields.xCodNifCliente).asString();
+        return new InvoiceApproveEventRequest(docRevisionId, fileName, approver, new Date(), numFatura, nifCliente);
     }
 
 }
