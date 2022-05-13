@@ -1,9 +1,6 @@
-package pt.nunomsf.ucm.components.workflow.publisher.rabbitmq;
+package pt.nunomsf.ucm.components.workflow.publisher.amqp;
 
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.*;
 import pt.nunomsf.ucm.components.workflow.exceptions.PublishException;
 import pt.nunomsf.ucm.components.workflow.publisher.IPublisher;
 import pt.nunomsf.ucm.components.workflow.exceptions.SerializationException;
@@ -26,7 +23,9 @@ public class RabbitMQEventPublisher<T> implements IPublisher<T, AMQPPublishMessa
 
     public void publish(T message, AMQPPublishMessageConfiguration configuration) throws PublishException {
         try (Channel channel = this.connection.createChannel()) {
-            AMQP.Exchange.DeclareOk response = channel.exchangeDeclare(configuration.getExchangeName(), configuration.getExchangeType(), configuration.getExchangeDurable());
+            AMQP.Exchange.DeclareOk response = channel.exchangeDeclare(configuration.getExchangeName(),
+                    BuiltinExchangeType.valueOf(configuration.getExchangeType().getType()),
+                    configuration.getExchangeDurable());
             channel.basicPublish(configuration.getExchangeName(), configuration.getRoutingKey(),
                     new AMQP.BasicProperties.Builder()
                             .contentType(configuration.getMessageContentType())

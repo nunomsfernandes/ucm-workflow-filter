@@ -1,6 +1,5 @@
-package pt.nunomsf.ucm.components.workflow.filters.actions.rabbitmq;
+package pt.nunomsf.ucm.components.workflow.filters.actions.amqp;
 
-import com.rabbitmq.client.BuiltinExchangeType;
 import intradoc.data.DataException;
 import intradoc.data.Workspace;
 import intradoc.shared.SharedObjects;
@@ -11,8 +10,9 @@ import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventResponse;
 import pt.nunomsf.ucm.components.workflow.publisher.IPublisher;
 import pt.nunomsf.ucm.components.workflow.publisher.MessageSerializer;
-import pt.nunomsf.ucm.components.workflow.publisher.rabbitmq.AMQPPublishMessageConfiguration;
-import pt.nunomsf.ucm.components.workflow.publisher.rabbitmq.RabbitMQEventPublisher;
+import pt.nunomsf.ucm.components.workflow.publisher.amqp.AMQPExchangeType;
+import pt.nunomsf.ucm.components.workflow.publisher.amqp.AMQPPublishMessageConfiguration;
+import pt.nunomsf.ucm.components.workflow.publisher.amqp.RabbitMQEventPublisher;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -38,7 +38,7 @@ public class InvoiceApproveAMQPPublisherFilterAction extends InvoiceApproveTempl
         Integer priority = Integer.valueOf(SharedObjects.getEnvironmentValue("InvoiceApproveAMQPPublisherFilterAction.priority"));
 
         try {
-            this.messageConfiguration = new AMQPPublishMessageConfiguration(appId, exchangeName, BuiltinExchangeType.valueOf(exchangeType), exchangeDurable, routingKey, null, deliveryMode, priority, MessageSerializer.JSON);
+            this.messageConfiguration = new AMQPPublishMessageConfiguration(appId, exchangeName, AMQPExchangeType.valueOf(exchangeType), exchangeDurable, routingKey, null, deliveryMode, priority, MessageSerializer.JSON);
             this.publisher = new RabbitMQEventPublisher<>(uri);
 
         } catch (URISyntaxException | NoSuchAlgorithmException | IOException | KeyManagementException | TimeoutException e) {

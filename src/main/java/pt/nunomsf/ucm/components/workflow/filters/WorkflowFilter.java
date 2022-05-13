@@ -6,7 +6,7 @@ import intradoc.data.DataException;
 import intradoc.data.Workspace;
 import intradoc.shared.FilterImplementor;
 import pt.nunomsf.ucm.components.workflow.filters.actions.IFilterAction;
-import pt.nunomsf.ucm.components.workflow.filters.actions.rabbitmq.InvoiceApproveAMQPPublisherFilterAction;
+import pt.nunomsf.ucm.components.workflow.filters.actions.amqp.InvoiceApproveAMQPPublisherFilterAction;
 import pt.nunomsf.ucm.components.workflow.filters.actions.storeprocedure.InvoiceApproveStoreProcedureFilterAction;
 
 import java.util.Arrays;

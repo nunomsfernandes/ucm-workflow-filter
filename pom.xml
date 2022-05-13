@@ -78,7 +78,7 @@
             <artifactId>jackson-databind</artifactId>
             <version>${com.fasterxml.jackson.version}</version>
         </dependency>
-        <!--rabbitmq-->
+        <!--amqp-->
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>

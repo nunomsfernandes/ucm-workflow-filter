@@ -1,11 +1,7 @@
-package pt.nunomsf.ucm.components.workflow.publisher.rabbitmq;
+package pt.nunomsf.ucm.components.workflow.publisher.amqp;
 
-import com.rabbitmq.client.BuiltinExchangeType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import pt.nunomsf.ucm.components.workflow.consumer.IConsumer;
-import pt.nunomsf.ucm.components.workflow.consumer.rabbitmq.AMQPConsumeMessageConfiguration;
-import pt.nunomsf.ucm.components.workflow.consumer.rabbitmq.RabbitMQEventConsumer;
 import pt.nunomsf.ucm.components.workflow.exceptions.PublishException;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
 import pt.nunomsf.ucm.components.workflow.publisher.IPublisher;
@@ -21,13 +17,13 @@ import java.util.concurrent.TimeoutException;
 
 public class RabbitMQEventExchangePublisherIntegrationTest {
 
-    private static String appId = "test";
+    private static final String appId = "test";
     private static String amqpUri;
     private static String exchangeName;
     private static String routingKey;
-    private static Boolean exchangeDurable = Boolean.TRUE;
-    private static Integer deliveryMode = 2;
-    private static Integer priority = 1;
+    private static final Boolean exchangeDurable = Boolean.TRUE;
+    private static final Integer deliveryMode = 2;
+    private static final Integer priority = 1;
 
     @BeforeAll
     public static void init() {
@@ -39,10 +35,10 @@ public class RabbitMQEventExchangePublisherIntegrationTest {
 
     @Test
     public void publishSuccess() throws URISyntaxException, NoSuchAlgorithmException, IOException, KeyManagementException, TimeoutException, PublishException {
-        BuiltinExchangeType exchangeType = BuiltinExchangeType.DIRECT;
+        AMQPExchangeType exchangeType = AMQPExchangeType.DIRECT;
         AMQPPublishMessageConfiguration messageConfiguration = new AMQPPublishMessageConfiguration(appId, exchangeName, exchangeType, exchangeDurable,
                     routingKey, new HashMap<>(), deliveryMode, priority, MessageSerializer.JSON);
-        IPublisher<InvoiceApproveEventRequest, AMQPPublishMessageConfiguration> publisher = new RabbitMQEventPublisher<>(this.amqpUri);
+        IPublisher<InvoiceApproveEventRequest, AMQPPublishMessageConfiguration> publisher = new RabbitMQEventPublisher<>(amqpUri);
         publisher.publish(new InvoiceApproveEventRequest(12L, "ARDoc112.pdf", "nuno", new Date(), "FA430943/2022", "234942123"), messageConfiguration);
     }
 
