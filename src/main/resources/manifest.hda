@@ -1,0 +1,19 @@
+﻿<?hda version="11gR1-11.1.1.4.0-idcprod1-101229T001824" jcharset=UTF8 encoding=utf-8?>
+@Properties LocalData
+CreateDate=10/12/22 7:11 PM
+blFieldTypes=CreateDate date
+ComponentName=WorkflowFilterComponent
+blDateFormat=M/d{/yy}{ h:mm[:ss]{ a}}!mAM,PM!tWET
+@end
+@ResultSet Manifest
+2
+entryType
+location
+component
+WorkflowFilterComponent/WorkflowFilterComponent.hda
+componentExtra
+WorkflowFilterComponent/readme.txt
+componentClasses
+WorkflowFilterComponent/classes/
+@end
+
