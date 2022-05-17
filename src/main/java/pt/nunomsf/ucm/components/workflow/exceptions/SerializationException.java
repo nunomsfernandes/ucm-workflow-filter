@@ -1,6 +1,6 @@
 package pt.nunomsf.ucm.components.workflow.exceptions;
 
-public class SerializationException extends  RuntimeException {
+public class SerializationException extends RuntimeException {
 
     public SerializationException(String message) {
         super(message);

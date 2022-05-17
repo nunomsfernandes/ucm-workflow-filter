@@ -18,12 +18,12 @@ import java.util.concurrent.TimeoutException;
 public class RabbitMQEventExchangePublisherIntegrationTest {
 
     private static final String appId = "test";
-    private static String amqpUri;
-    private static String exchangeName;
-    private static String routingKey;
     private static final Boolean exchangeDurable = Boolean.TRUE;
     private static final Integer deliveryMode = 2;
     private static final Integer priority = 1;
+    private static String amqpUri;
+    private static String exchangeName;
+    private static String routingKey;
 
     @BeforeAll
     public static void init() {
@@ -37,7 +37,7 @@ public class RabbitMQEventExchangePublisherIntegrationTest {
     public void publishSuccess() throws URISyntaxException, NoSuchAlgorithmException, IOException, KeyManagementException, TimeoutException, PublishException {
         AMQPExchangeType exchangeType = AMQPExchangeType.DIRECT;
         AMQPPublishMessageConfiguration messageConfiguration = new AMQPPublishMessageConfiguration(appId, exchangeName, exchangeType, exchangeDurable,
-                    routingKey, new HashMap<>(), deliveryMode, priority, MessageSerializer.JSON);
+                routingKey, new HashMap<>(), deliveryMode, priority, MessageSerializer.JSON);
         IPublisher<InvoiceApproveEventRequest, AMQPPublishMessageConfiguration> publisher = new RabbitMQEventPublisher<>(amqpUri);
         publisher.publish(new InvoiceApproveEventRequest(12L, "ARDoc112.pdf", "nuno", new Date(), "FA430943/2022", "234942123"), messageConfiguration);
     }

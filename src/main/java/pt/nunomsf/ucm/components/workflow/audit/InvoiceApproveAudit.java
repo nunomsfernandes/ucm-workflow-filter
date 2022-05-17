@@ -23,15 +23,15 @@ public class InvoiceApproveAudit {
     public void log(InvoiceApproveEventRequest eventRequest) throws AuditException {
         try {
             DataBinder dataBinder = new DataBinder();
-            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.dID, String.valueOf(eventRequest.getDocRevisionId()));
-            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.numFatura, eventRequest.getNumFatura());
-            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.nifCliente, eventRequest.getNifCliente());
-            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.nomDocumento, eventRequest.getFileName());
-            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.codUtilizador, eventRequest.getApprover());
-            dataBinder.putLocalDate(Constants.Queries.IARApproveDocumentAudit.Collumns.datCriacao, eventRequest.getApprovedDate());
-            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Collumns.codStatus, String.valueOf(InvoiceApproveEventStatus.CREATED.status));
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Columns.dID.name(), String.valueOf(eventRequest.getDocRevisionId()));
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Columns.numFatura.name(), eventRequest.getNumFatura());
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Columns.nifCliente.name(), eventRequest.getNifCliente());
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Columns.nomDocumento.name(), eventRequest.getFileName());
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Columns.codUtilizador.name(), eventRequest.getApprover());
+            dataBinder.putLocalDate(Constants.Queries.IARApproveDocumentAudit.Columns.datCriacao.name(), eventRequest.getApprovedDate());
+            dataBinder.putLocal(Constants.Queries.IARApproveDocumentAudit.Columns.codStatus.name(), String.valueOf(InvoiceApproveEventStatus.CREATED.status));
             Workspace workspace = (Workspace) this.auditDatabaseProvider.getProvider();
-            workspace.execute(Constants.Queries.IARApproveDocumentAudit.name, dataBinder);
+            workspace.execute(Constants.Queries.IARApproveDocumentAudit.name(), dataBinder);
         } catch (DataException e) {
             throw new AuditException(e);
         }
@@ -40,13 +40,13 @@ public class InvoiceApproveAudit {
     public void log(InvoiceApproveEventResponse eventResponse) throws AuditException {
         try {
             DataBinder dataBinder = new DataBinder();
-            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Collumns.dID, String.valueOf(eventResponse.getDocRevisionId()));
-            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Collumns.codStatus, String.valueOf(eventResponse.getCodStatus().status));
-            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Collumns.codResposta, String.valueOf(eventResponse.getIntegrationId()));
-            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Collumns.txtMessage, eventResponse.getMessage());
-            dataBinder.putLocalDate(Constants.Queries.UARApproveDocumentAudit.Collumns.datAtualizacao, new Date());
+            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Columns.dID.name(), String.valueOf(eventResponse.getDocRevisionId()));
+            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Columns.codStatus.name(), String.valueOf(eventResponse.getCodStatus().status));
+            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Columns.codResposta.name(), String.valueOf(eventResponse.getIntegrationId()));
+            dataBinder.putLocal(Constants.Queries.UARApproveDocumentAudit.Columns.txtMessage.name(), eventResponse.getMessage());
+            dataBinder.putLocalDate(Constants.Queries.UARApproveDocumentAudit.Columns.datAtualizacao.name(), new Date());
             Workspace workspace = (Workspace) this.auditDatabaseProvider.getProvider();
-            workspace.execute(Constants.Queries.UARApproveDocumentAudit.name, dataBinder);
+            workspace.execute(Constants.Queries.UARApproveDocumentAudit.name(), dataBinder);
         } catch (DataException e) {
             throw new AuditException(e);
         }

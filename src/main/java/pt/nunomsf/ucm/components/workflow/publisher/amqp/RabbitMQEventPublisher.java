@@ -2,8 +2,8 @@ package pt.nunomsf.ucm.components.workflow.publisher.amqp;
 
 import com.rabbitmq.client.*;
 import pt.nunomsf.ucm.components.workflow.exceptions.PublishException;
-import pt.nunomsf.ucm.components.workflow.publisher.IPublisher;
 import pt.nunomsf.ucm.components.workflow.exceptions.SerializationException;
+import pt.nunomsf.ucm.components.workflow.publisher.IPublisher;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

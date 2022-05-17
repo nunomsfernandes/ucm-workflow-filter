@@ -1,52 +1,60 @@
 ﻿<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>WorkflowFilterComponent query</title>
-	</head>
-	<body>
-		<@table WorkflowFilterQueries@>
-			<table border=1><caption><strong>Query Definition Table</strong></caption>
-				<tr>
-					<td>name</td><td>queryStr</td><td>parameters</td>
-				</tr>
-				<tr>
-					<td>(ORACLE.CALLABLE)QGetFileByDid</td>
-					<td>{call GET_FILE (?, ?, ?, ?, ?)}</td>
-					<td>dID in:number
-						isPrimary in:number
-						isWebformat in:number
-						rendition in:varchar
-						file out:blob</td>
-				</tr>
-				<tr>
-					<td>IARInvoiceApproveAudit</td>
-					<td>INSERT INTO AMT_AR_APPROVE_EBS_INTEGRATION
-						(DID, DDOCNAME, NUM_FATURA, NIF_CLIENTE, NOM_DOCUMENTO, DAT_CRIACAO, COD_STATUS, COD_UTILIZADOR)
-						values (?, ?, ?, ?, ?, ?, ?, ?)</td>
-					<td>dID number
-						dDocName varchar
-						numFatura varchar
-						nifCliente varchar
-						nomDocumento varchar
-						datCriacao: date
-						codStatus: number
-						codUtilizador varchar</td>
-				</tr>
-				<tr>
-					<td>UARInvoiceApproveAudit</td>
-					<td>UPDATE AMT_AR_APPROVE_EBS_INTEGRATION
-						SET COD_STATUS = ?,
-							COD_RESPOSTA = ?,
-							DAT_ATUALIZACAO = ?,
-							TXT_MESSAGE = ?
-						WHERE DID = ?</td>
-					<td>codStatus number
-						codResposta number
-						datAtualizacao date
-						txtMessage varchar
-						dID number</td>
-				</tr>
-			</table>
-		<@end@>
-	</body>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>WorkflowFilterComponent query</title>
+</head>
+<body>
+<@table WorkflowFilterQueries@>
+<table border=1>
+    <caption><strong>Query Definition Table</strong></caption>
+    <tr>
+        <td>name</td>
+        <td>queryStr</td>
+        <td>parameters</td>
+    </tr>
+    <tr>
+        <td>(ORACLE.CALLABLE)QGetFileByDid</td>
+        <td>{call GET_FILE (?, ?, ?, ?, ?)}</td>
+        <td>dID in:number
+            isPrimary in:number
+            isWebformat in:number
+            rendition in:varchar
+            file out:blob
+        </td>
+    </tr>
+    <tr>
+        <td>IARInvoiceApproveAudit</td>
+        <td>INSERT INTO AMT_AR_APPROVE_EBS_INTEGRATION
+            (DID, DDOCNAME, NUM_FATURA, NIF_CLIENTE, NOM_DOCUMENTO, DAT_CRIACAO, COD_STATUS, COD_UTILIZADOR)
+            values (?, ?, ?, ?, ?, ?, ?, ?)
+        </td>
+        <td>dID number
+            dDocName varchar
+            numFatura varchar
+            nifCliente varchar
+            nomDocumento varchar
+            datCriacao: date
+            codStatus: number
+            codUtilizador varchar
+        </td>
+    </tr>
+    <tr>
+        <td>UARInvoiceApproveAudit</td>
+        <td>UPDATE AMT_AR_APPROVE_EBS_INTEGRATION
+            SET COD_STATUS = ?,
+            COD_RESPOSTA = ?,
+            DAT_ATUALIZACAO = ?,
+            TXT_MESSAGE = ?
+            WHERE DID = ?
+        </td>
+        <td>codStatus number
+            codResposta number
+            datAtualizacao date
+            txtMessage varchar
+            dID number
+        </td>
+    </tr>
+</table>
+<@end@>
+</body>
 </html>

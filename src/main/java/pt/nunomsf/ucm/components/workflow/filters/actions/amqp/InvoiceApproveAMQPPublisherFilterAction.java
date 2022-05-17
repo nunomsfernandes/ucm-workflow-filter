@@ -41,7 +41,8 @@ public class InvoiceApproveAMQPPublisherFilterAction extends InvoiceApproveTempl
             this.messageConfiguration = new AMQPPublishMessageConfiguration(appId, exchangeName, AMQPExchangeType.valueOf(exchangeType), exchangeDurable, routingKey, null, deliveryMode, priority, MessageSerializer.JSON);
             this.publisher = new RabbitMQEventPublisher<>(uri);
 
-        } catch (URISyntaxException | NoSuchAlgorithmException | IOException | KeyManagementException | TimeoutException e) {
+        } catch (URISyntaxException | NoSuchAlgorithmException | IOException | KeyManagementException |
+                 TimeoutException e) {
             throw new DataException(e.getMessage(), e);
         }
     }
@@ -51,13 +52,14 @@ public class InvoiceApproveAMQPPublisherFilterAction extends InvoiceApproveTempl
         try {
             this.messageConfiguration = messageConfiguration;
             this.publisher = new RabbitMQEventPublisher<>(uri);
-        } catch (URISyntaxException | NoSuchAlgorithmException | IOException | KeyManagementException | TimeoutException e) {
+        } catch (URISyntaxException | NoSuchAlgorithmException | IOException | KeyManagementException |
+                 TimeoutException e) {
             throw new DataException(e.getMessage(), e);
         }
     }
 
     @Override
-    protected InvoiceApproveEventResponse executeAction (InvoiceApproveEventRequest eventRequest, Workspace workspace) throws FilterActionException {
+    protected InvoiceApproveEventResponse executeAction(InvoiceApproveEventRequest eventRequest, Workspace workspace) throws FilterActionException {
         try {
             this.publisher.publish(eventRequest, this.messageConfiguration);
             return InvoiceApproveEventResponse.createSuccessEventResponse(eventRequest.getDocRevisionId(), 0L);

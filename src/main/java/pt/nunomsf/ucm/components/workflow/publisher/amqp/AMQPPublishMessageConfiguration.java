@@ -31,30 +31,39 @@ public class AMQPPublishMessageConfiguration {
     public String getAppId() {
         return appId;
     }
+
     public String getExchangeName() {
         return exchangeName;
     }
+
     public AMQPExchangeType getExchangeType() {
         return exchangeType;
     }
+
     public Boolean getExchangeDurable() {
         return exchangeDurable;
     }
+
     public String getRoutingKey() {
         return routingKey;
     }
+
     public Map<String, Object> getHeaders() {
         return headers;
     }
+
     public Integer getDeliveryMode() {
         return deliveryMode;
     }
+
     public Integer getPriority() {
         return priority;
     }
+
     public MessageSerializer getMessageSerializer() {
         return this.messageSerializer;
     }
+
     public String getMessageContentType() {
         return this.messageSerializer.contentType();
     }

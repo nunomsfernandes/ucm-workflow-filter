@@ -19,13 +19,14 @@ public enum MessageSerializer {
                 throw new SerializationException(e);
             }
         }
+
         @Override
         public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 T deserialized = mapper.readValue(bytes, clazz);
                 return deserialized;
-            }  catch (IOException e) {
+            } catch (IOException e) {
                 throw new SerializationException(e);
             }
         }
@@ -37,6 +38,7 @@ public enum MessageSerializer {
     };
 
     public abstract <T> byte[] serialize(T object) throws SerializationException;
+
     public abstract <T> T deserialize(byte[] object, Class<T> clazz) throws SerializationException;
 
     public abstract String contentType();
