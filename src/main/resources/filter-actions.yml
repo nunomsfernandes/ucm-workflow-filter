@@ -1,15 +1,11 @@
-profiles:
-  - ARDocs:
-      conditions:
-        localData:
-          - dWfName: ARDocs_Workflow
-          - dWfStepName: WFS_ARDocs_Approve
-          - dAction: APPROVE
-        collections:
-          - QdocInfo:
-              row: 0
-              fields:
-                - xIdcProfile: ARDocs
-      actions:
-        - pt.nunomsf.ucm.components.workflow.filters.actions.storeprocedure.InvoiceApproveStoreProcedureFilterAction
-        - pt.nunomsf.ucm.components.workflow.filters.actions.amqp.InvoiceApproveAMQPPublisherFilterAction
+rules:
+  - name: On ARDoc Approve
+    conditions:
+      localData.dWfName: ARDocs_Workflow
+      localData.dWfStepName: WFS_ARDocs_Approve
+      localData.dAction: APPROVE
+      QdocInfo.xIdcProfile: ARDocs
+      QdocInfo.xClasseProjeto: ARDocs
+    actions:
+      - pt.nunomsf.ucm.components.workflow.filters.actions.storeprocedure.InvoiceApproveStoreProcedureFilterAction
+      - pt.nunomsf.ucm.components.workflow.filters.actions.amqp.InvoiceApproveAMQPPublisherFilterAction
