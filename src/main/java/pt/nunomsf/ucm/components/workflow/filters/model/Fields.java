@@ -2,9 +2,11 @@ package pt.nunomsf.ucm.components.workflow.filters.model;
 
 import intradoc.data.DataBinder;
 import intradoc.data.ResultSet;
-import pt.nunomsf.ucm.components.workflow.constants.Constants;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 
 public class Fields {
 

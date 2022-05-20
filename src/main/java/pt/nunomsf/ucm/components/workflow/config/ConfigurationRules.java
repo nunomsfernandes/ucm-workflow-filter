@@ -2,7 +2,7 @@ package pt.nunomsf.ucm.components.workflow.config;
 
 import java.util.List;
 
-public class Rules {
+public class ConfigurationRules {
 
     private List<Rule> rules;
 
@@ -13,4 +13,6 @@ public class Rules {
     public void setRules(List<Rule> rules) {
         this.rules = rules;
     }
+
+
 }

@@ -32,7 +32,6 @@ public class RabbitMQEventExchangePublisherIntegrationTest {
         routingKey = System.getProperty("routingKey");
     }
 
-
     @Test
     public void publishSuccess() throws URISyntaxException, NoSuchAlgorithmException, IOException, KeyManagementException, TimeoutException, PublishException {
         AMQPExchangeType exchangeType = AMQPExchangeType.DIRECT;

@@ -7,5 +7,5 @@ rules:
       QdocInfo.xIdcProfile: ARDocs
       QdocInfo.xClasseProjeto: ARDocs
     actions:
-      - pt.nunomsf.ucm.components.workflow.filters.actions.storeprocedure.InvoiceApproveStoreProcedureFilterAction
-      - pt.nunomsf.ucm.components.workflow.filters.actions.amqp.InvoiceApproveAMQPPublisherFilterAction
+      - InvoiceApproveStoreProcedureFilterAction
+      - InvoiceApproveAMQPPublisherFilterAction

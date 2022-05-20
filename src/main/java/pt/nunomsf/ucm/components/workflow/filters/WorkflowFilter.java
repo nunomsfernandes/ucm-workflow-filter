@@ -7,30 +7,32 @@ import intradoc.data.ResultSet;
 import intradoc.data.Workspace;
 import intradoc.shared.FilterImplementor;
 import pt.nunomsf.ucm.components.workflow.config.Configuration;
-import pt.nunomsf.ucm.components.workflow.config.Rule;
 import pt.nunomsf.ucm.components.workflow.constants.Constants;
-import pt.nunomsf.ucm.components.workflow.exceptions.ConfigurationException;
 import pt.nunomsf.ucm.components.workflow.filters.actions.IFilterAction;
-import pt.nunomsf.ucm.components.workflow.filters.model.Field;
+import pt.nunomsf.ucm.components.workflow.filters.actions.resolver.ConfigurationFilterActionsResolver;
+import pt.nunomsf.ucm.components.workflow.filters.actions.resolver.IFilterActionsResolver;
 import pt.nunomsf.ucm.components.workflow.filters.model.Fields;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WorkflowFilter implements FilterImplementor {
 
-    private final Configuration configuration;
+    private final IFilterActionsResolver filterActionsResolver;
 
     public WorkflowFilter() throws IOException {
         String confPath = resolveConfigurationPath();
-        this.configuration = new Configuration(confPath);
+        Configuration configuration = new Configuration(new FileInputStream(confPath));
+        this.filterActionsResolver = new ConfigurationFilterActionsResolver(configuration.getConfigurationRules());
     }
 
     @Override
     public int doFilter(Workspace workspace, DataBinder dataBinder, ExecutionContext executionContext) throws DataException {
         Fields fields = buildContextFields(workspace, dataBinder);
-        List<IFilterAction> actions = resolveContextActions(fields);
+        List<IFilterAction> actions = this.filterActionsResolver.resolveFilterActions(fields);
         actions.forEach(a -> a.execute(workspace, fields));
         return FilterImplementor.CONTINUE;
     }
@@ -43,37 +45,6 @@ public class WorkflowFilter implements FilterImplementor {
         return new Fields(dataBinder, resultSets);
     }
 
-    private List<IFilterAction> resolveContextActions(Fields contextFields) {
-        List<Rule> rules = this.configuration.getRules().getRules();
-        List<String> actions = rules.stream().filter(rule -> passConditions(rule, contextFields))
-                .map(Rule::getActions).flatMap(Collection::stream).collect(Collectors.toList());
-        return actions.stream().map(this::createClassInstance).collect(Collectors.toList());
-    }
-
-    private IFilterAction createClassInstance(String className) {
-        try {
-            return (IFilterAction) Class.forName(className).newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new ConfigurationException(e);
-        }
-    }
-
-    private boolean passConditions(Rule rule, Fields contextFields) {
-        Map<String, String> conditions = rule.getConditions();
-        boolean passCondition = true;
-        for (Map.Entry condition : conditions.entrySet()) {
-            if (!passCondition(condition, contextFields)) {
-                passCondition = false;
-                break;
-            }
-        }
-        return passCondition;
-    }
-
-    private boolean passCondition(Map.Entry<String, String> condition, Fields contextFields) {
-        Optional<Field> executionValue = contextFields.getValue(condition.getKey());
-        return executionValue.map(f -> f.asString().equals(condition.getValue())).orElse(false);
-    }
 
     private ResultSet readDocInfo(Long docRevisionId, Workspace workspace) throws DataException {
         DataBinder dataBinder = new DataBinder();

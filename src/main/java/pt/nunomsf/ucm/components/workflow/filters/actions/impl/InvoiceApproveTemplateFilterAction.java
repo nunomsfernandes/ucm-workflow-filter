@@ -1,12 +1,11 @@
-package pt.nunomsf.ucm.components.workflow.filters.actions;
+package pt.nunomsf.ucm.components.workflow.filters.actions.impl;
 
 import intradoc.data.Workspace;
-import intradoc.provider.Provider;
-import intradoc.provider.Providers;
-import intradoc.shared.SharedObjects;
-import pt.nunomsf.ucm.components.workflow.audit.InvoiceApproveAudit;
+import pt.nunomsf.ucm.components.workflow.audit.DatabaseInvoiceApproveAudit;
+import pt.nunomsf.ucm.components.workflow.audit.IInvoiceApproveAudit;
 import pt.nunomsf.ucm.components.workflow.constants.Constants;
 import pt.nunomsf.ucm.components.workflow.exceptions.FilterActionException;
+import pt.nunomsf.ucm.components.workflow.filters.actions.IFilterAction;
 import pt.nunomsf.ucm.components.workflow.filters.model.Field;
 import pt.nunomsf.ucm.components.workflow.filters.model.Fields;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
@@ -17,19 +16,18 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public abstract class InvoiceApproveTemplateFilterAction implements IFilterAction {
-    private final InvoiceApproveAudit audit;
+    private final IInvoiceApproveAudit audit;
 
     public InvoiceApproveTemplateFilterAction() {
-        String auditDatabaseProviderName = SharedObjects.getEnvironmentValue("InvoiceApproveTemplateFilterAction.auditDatabaseProvider");
-        Provider auditDatabaseProvider = Providers.getProvider(auditDatabaseProviderName);
-        this.audit = new InvoiceApproveAudit(auditDatabaseProvider);
+        this.audit = new DatabaseInvoiceApproveAudit();
     }
 
     @Override
     public void execute(Workspace workspace, Fields data) throws FilterActionException {
         Optional<InvoiceApproveEventRequest> oEventRequest = createEventRequest(workspace, data);
-        InvoiceApproveEventRequest eventRequest = oEventRequest.get();
+
         if (oEventRequest.isPresent()) {
+            InvoiceApproveEventRequest eventRequest = oEventRequest.get();
             try {
                 this.audit.log(eventRequest);
                 InvoiceApproveEventResponse eventResponse = executeAction(eventRequest, workspace);

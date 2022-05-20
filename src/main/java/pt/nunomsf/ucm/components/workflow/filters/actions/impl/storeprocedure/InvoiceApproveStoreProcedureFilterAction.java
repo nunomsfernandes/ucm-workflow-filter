@@ -1,4 +1,4 @@
-package pt.nunomsf.ucm.components.workflow.filters.actions.storeprocedure;
+package pt.nunomsf.ucm.components.workflow.filters.actions.impl.storeprocedure;
 
 import intradoc.data.CallableResults;
 import intradoc.data.DataBinder;
@@ -10,7 +10,7 @@ import intradoc.shared.SharedObjects;
 import org.apache.commons.io.IOUtils;
 import pt.nunomsf.ucm.components.workflow.constants.Constants;
 import pt.nunomsf.ucm.components.workflow.exceptions.FilterActionException;
-import pt.nunomsf.ucm.components.workflow.filters.actions.InvoiceApproveTemplateFilterAction;
+import pt.nunomsf.ucm.components.workflow.filters.actions.impl.InvoiceApproveTemplateFilterAction;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventResponse;
 

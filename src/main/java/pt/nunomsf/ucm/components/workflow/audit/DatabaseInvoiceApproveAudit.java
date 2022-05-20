@@ -4,6 +4,8 @@ import intradoc.data.DataBinder;
 import intradoc.data.DataException;
 import intradoc.data.Workspace;
 import intradoc.provider.Provider;
+import intradoc.provider.Providers;
+import intradoc.shared.SharedObjects;
 import pt.nunomsf.ucm.components.workflow.constants.Constants;
 import pt.nunomsf.ucm.components.workflow.exceptions.AuditException;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
@@ -12,14 +14,18 @@ import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventStatus;
 
 import java.util.Date;
 
-public class InvoiceApproveAudit {
+public class DatabaseInvoiceApproveAudit implements IInvoiceApproveAudit {
 
     private final Provider auditDatabaseProvider;
 
-    public InvoiceApproveAudit(Provider auditDatabaseProvider) {
+    public DatabaseInvoiceApproveAudit() {
+        String auditDatabaseProviderName = SharedObjects.getEnvironmentValue("DatabaseInvoiceApproveAudit.auditDatabaseProvider");
+        Provider auditDatabaseProvider = Providers.getProvider(auditDatabaseProviderName);
         this.auditDatabaseProvider = auditDatabaseProvider;
     }
 
+
+    @Override
     public void log(InvoiceApproveEventRequest eventRequest) throws AuditException {
         try {
             DataBinder dataBinder = new DataBinder();
@@ -37,6 +43,7 @@ public class InvoiceApproveAudit {
         }
     }
 
+    @Override
     public void log(InvoiceApproveEventResponse eventResponse) throws AuditException {
         try {
             DataBinder dataBinder = new DataBinder();
