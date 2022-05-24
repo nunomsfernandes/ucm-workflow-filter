@@ -4,13 +4,10 @@ import pt.nunomsf.ucm.components.workflow.config.ConfigurationRules;
 import pt.nunomsf.ucm.components.workflow.config.Rule;
 import pt.nunomsf.ucm.components.workflow.exceptions.ConfigurationException;
 import pt.nunomsf.ucm.components.workflow.filters.actions.IFilterAction;
-import pt.nunomsf.ucm.components.workflow.filters.model.Field;
-import pt.nunomsf.ucm.components.workflow.filters.model.Fields;
+import pt.nunomsf.ucm.components.workflow.filters.model.DataValueField;
+import pt.nunomsf.ucm.components.workflow.filters.model.DataFields;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfigurationFilterActionsResolver implements  IFilterActionsResolver {
@@ -22,7 +19,8 @@ public class ConfigurationFilterActionsResolver implements  IFilterActionsResolv
     }
 
     @Override
-    public List<IFilterAction> resolveFilterActions(Fields contextFields) {
+    public List<IFilterAction> resolveFilterActions(DataFields contextFields) {
+        Objects.requireNonNull(contextFields);
         List<Rule> rules = this.configurationRules.getRules();
         List<String> actions = rules.stream().filter(rule -> passConditions(rule, contextFields))
                 .map(Rule::getActions).flatMap(Collection::stream).collect(Collectors.toList());
@@ -37,8 +35,6 @@ public class ConfigurationFilterActionsResolver implements  IFilterActionsResolv
         }
     }
 
-
-
     private Class createClassInstance(String className) {
         try {
             return Class.forName(className);
@@ -47,7 +43,7 @@ public class ConfigurationFilterActionsResolver implements  IFilterActionsResolv
         }
     }
 
-    private boolean passConditions(Rule rule, Fields contextFields) {
+    private boolean passConditions(Rule rule, DataFields contextFields) {
         Map<String, String> conditions = rule.getConditions();
         boolean passCondition = true;
         for (Map.Entry condition : conditions.entrySet()) {
@@ -59,8 +55,8 @@ public class ConfigurationFilterActionsResolver implements  IFilterActionsResolv
         return passCondition;
     }
 
-    private boolean passCondition(Map.Entry<String, String> condition, Fields contextFields) {
-        Optional<Field> executionValue = contextFields.getValue(condition.getKey());
+    private boolean passCondition(Map.Entry<String, String> condition, DataFields contextFields) {
+        Optional<DataValueField> executionValue = contextFields.getValue(condition.getKey());
         return executionValue.map(f -> f.asString().equals(condition.getValue())).orElse(false);
     }
 }

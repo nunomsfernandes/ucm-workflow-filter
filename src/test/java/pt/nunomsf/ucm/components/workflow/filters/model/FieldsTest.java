@@ -25,7 +25,7 @@ public class FieldsTest {
         dataBinder.putLocal("dWfStepName", "WFS_ARDocs_Approve");
         dataBinder.putLocal("dAction", "APPROVE");
 
-        Fields fields = new Fields(dataBinder, resultSets);
+        DataFields fields = new DataFields(dataBinder, resultSets);
 
         Assertions.assertEquals("ARDocs_Workflow", fields.getValue("localData.dWfName").get().asString());
         Assertions.assertEquals("WFS_ARDocs_Approve", fields.getValue("localData.dWfStepName").get().asString());

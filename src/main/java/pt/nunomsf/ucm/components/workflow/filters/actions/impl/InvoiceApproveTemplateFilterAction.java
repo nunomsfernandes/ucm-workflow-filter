@@ -6,8 +6,8 @@ import pt.nunomsf.ucm.components.workflow.audit.IInvoiceApproveAudit;
 import pt.nunomsf.ucm.components.workflow.constants.Constants;
 import pt.nunomsf.ucm.components.workflow.exceptions.FilterActionException;
 import pt.nunomsf.ucm.components.workflow.filters.actions.IFilterAction;
-import pt.nunomsf.ucm.components.workflow.filters.model.Field;
-import pt.nunomsf.ucm.components.workflow.filters.model.Fields;
+import pt.nunomsf.ucm.components.workflow.filters.model.DataValueField;
+import pt.nunomsf.ucm.components.workflow.filters.model.DataFields;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventRequest;
 import pt.nunomsf.ucm.components.workflow.model.InvoiceApproveEventResponse;
 
@@ -23,7 +23,7 @@ public abstract class InvoiceApproveTemplateFilterAction implements IFilterActio
     }
 
     @Override
-    public void execute(Workspace workspace, Fields data) throws FilterActionException {
+    public void execute(Workspace workspace, DataFields data) throws FilterActionException {
         Optional<InvoiceApproveEventRequest> oEventRequest = createEventRequest(workspace, data);
 
         if (oEventRequest.isPresent()) {
@@ -44,13 +44,13 @@ public abstract class InvoiceApproveTemplateFilterAction implements IFilterActio
 
     protected abstract InvoiceApproveEventResponse executeAction(InvoiceApproveEventRequest request, Workspace workspace) throws FilterActionException;
 
-    private Optional<InvoiceApproveEventRequest> createEventRequest(Workspace workspace, Fields data) throws FilterActionException {
+    private Optional<InvoiceApproveEventRequest> createEventRequest(Workspace workspace, DataFields data) throws FilterActionException {
 
-        Optional<Field> oDocRevisionId = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.dID.name());
-        Optional<Field> oFileName = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.nomDocumento.name());
-        Optional<Field> oApprover = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.codUtilizador.name());
-        Optional<Field> oNumFatura = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.numFatura.name());
-        Optional<Field> oNifCliente = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.nifCliente.name());
+        Optional<DataValueField> oDocRevisionId = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.dID.name());
+        Optional<DataValueField> oFileName = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.nomDocumento.name());
+        Optional<DataValueField> oApprover = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.codUtilizador.name());
+        Optional<DataValueField> oNumFatura = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.numFatura.name());
+        Optional<DataValueField> oNifCliente = data.getValue(Constants.Queries.IARApproveDocumentAudit.Columns.nifCliente.name());
 
         if (Stream.of(oDocRevisionId, oFileName, oApprover, oNumFatura, oNifCliente).allMatch(Optional::isPresent)) {
             return Optional.of(new InvoiceApproveEventRequest(oDocRevisionId.get().asLong(),

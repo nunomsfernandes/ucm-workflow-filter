@@ -1,16 +1,17 @@
 package pt.nunomsf.ucm.components.workflow.filters.model;
 
-public class Field {
-    private final String resultSet;
+import java.util.Objects;
+
+public class DataValueField {
     private final String value;
 
-    private Field(String resultSet, String value) {
-        this.resultSet = resultSet;
+    private DataValueField(String resultSet, String value) {
         this.value = value;
     }
 
-    public static Field of (String resultSet, String value) {
-        return new Field(resultSet, value);
+    public static DataValueField of (String resultSet, String value) {
+        Objects.requireNonNull(value);
+        return new DataValueField(resultSet, value);
     }
 
     public Long asLong() {

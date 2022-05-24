@@ -11,7 +11,7 @@ import pt.nunomsf.ucm.components.workflow.constants.Constants;
 import pt.nunomsf.ucm.components.workflow.filters.actions.IFilterAction;
 import pt.nunomsf.ucm.components.workflow.filters.actions.resolver.ConfigurationFilterActionsResolver;
 import pt.nunomsf.ucm.components.workflow.filters.actions.resolver.IFilterActionsResolver;
-import pt.nunomsf.ucm.components.workflow.filters.model.Fields;
+import pt.nunomsf.ucm.components.workflow.filters.model.DataFields;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,18 +31,18 @@ public class WorkflowFilter implements FilterImplementor {
 
     @Override
     public int doFilter(Workspace workspace, DataBinder dataBinder, ExecutionContext executionContext) throws DataException {
-        Fields fields = buildContextFields(workspace, dataBinder);
+        DataFields fields = buildContextFields(workspace, dataBinder);
         List<IFilterAction> actions = this.filterActionsResolver.resolveFilterActions(fields);
         actions.forEach(a -> a.execute(workspace, fields));
         return FilterImplementor.CONTINUE;
     }
 
-    private Fields buildContextFields(Workspace workspace, DataBinder dataBinder) throws DataException {
+    private DataFields buildContextFields(Workspace workspace, DataBinder dataBinder) throws DataException {
         Long docRevisionId = Long.valueOf(dataBinder.get(Constants.Tables.Revisions.dID.name()));
         ResultSet docInfoResultSet = readDocInfo(docRevisionId, workspace);
         Map<String, ResultSet> resultSets = new HashMap<>();
         resultSets.put(Constants.Queries.QdocInfo.name(), docInfoResultSet);
-        return new Fields(dataBinder, resultSets);
+        return new DataFields(dataBinder, resultSets);
     }
 
 

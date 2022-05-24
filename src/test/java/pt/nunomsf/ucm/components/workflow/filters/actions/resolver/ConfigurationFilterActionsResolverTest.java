@@ -9,7 +9,7 @@ import pt.nunomsf.ucm.components.workflow.config.Configuration;
 import pt.nunomsf.ucm.components.workflow.filters.actions.IFilterAction;
 import pt.nunomsf.ucm.components.workflow.filters.actions.impl.SystemOutFilterAction;
 import pt.nunomsf.ucm.components.workflow.filters.actions.impl.VoidFilterAction;
-import pt.nunomsf.ucm.components.workflow.filters.model.Fields;
+import pt.nunomsf.ucm.components.workflow.filters.model.DataFields;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,7 +41,7 @@ public class ConfigurationFilterActionsResolverTest {
         dataResultSet1.addRowWithList(Arrays.asList("ARDocs", "ARDocs"));
         Map<String, ResultSet> resultSets = new HashMap<>();
         resultSets.put("QdocInfo", dataResultSet1);
-        Fields fields = new Fields(dataBinder, resultSets);
+        DataFields fields = new DataFields(dataBinder, resultSets);
         List<IFilterAction> filterActions = this.filterActionsResolver.resolveFilterActions(fields);
         Assertions.assertEquals(2, filterActions.size());
         long soutCount = filterActions.stream().filter(fa -> fa instanceof SystemOutFilterAction).count();
@@ -60,7 +60,28 @@ public class ConfigurationFilterActionsResolverTest {
         dataResultSet1.addRowWithList(Arrays.asList("ARDocs", "ARDocs"));
         Map<String, ResultSet> resultSets = new HashMap<>();
         resultSets.put("QdocInfo", dataResultSet1);
-        Fields fields = new Fields(dataBinder, resultSets);
+        DataFields fields = new DataFields(dataBinder, resultSets);
+        List<IFilterAction> filterActions = this.filterActionsResolver.resolveFilterActions(fields);
+        Assertions.assertEquals(0, filterActions.size());
+    }
+
+    @Test
+    public void resolveActionsFromEmptyDataBinderTest() {
+        DataBinder dataBinder = new DataBinder();
+        Map<String, ResultSet> resultSets = new HashMap<>();
+        DataFields fields = new DataFields(dataBinder, resultSets);
+        List<IFilterAction> filterActions = this.filterActionsResolver.resolveFilterActions(fields);
+        Assertions.assertEquals(0, filterActions.size());
+    }
+
+    @Test
+    public void resolveActionsFromEmptyResultSetTest() {
+        DataBinder dataBinder = new DataBinder();
+        dataBinder.putLocal("dWfName", "ARDocs_Workflow");
+        dataBinder.putLocal("dWfStepName", "WFS_ARDocs_Approve");
+        dataBinder.putLocal("dAction", "APPROVE");
+        Map<String, ResultSet> resultSets = new HashMap<>();
+        DataFields fields = new DataFields(dataBinder, resultSets);
         List<IFilterAction> filterActions = this.filterActionsResolver.resolveFilterActions(fields);
         Assertions.assertEquals(0, filterActions.size());
     }
